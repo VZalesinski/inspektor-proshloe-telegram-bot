@@ -67,8 +67,14 @@ bot.command('meme', async ctx => {
       );
     }
   } catch (error) {
-    console.error('Ошибка при обработке команды /meme:', error); // Логируем ошибку для отладки
-    await ctx.reply('Произошла ошибка при получении мема. Попробуйте позже.');
+    console.error('Ошибка при обработке команды /meme:', error);
+    if (error.code === 'ECONNABORTED' && error.message.includes('timeout')) {
+      await ctx.reply(
+        'Не удалось получить мем за отведенное время. Попробуйте позже.'
+      );
+    } else {
+      await ctx.reply('Произошла ошибка при получении мема. Попробуйте позже.');
+    }
   }
 });
 

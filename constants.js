@@ -18,7 +18,7 @@ export const phrasesList = [
   'ну просто тьмутаракань!'
 ];
 
-export const answerProbability = 0.4; 
+export const answerProbability = 0.8; 
 
 export const sentMemesCache = new Set();
 export const cacheLimit = 20;

@@ -36,7 +36,8 @@ bot.command('quiz', async ctx => {
 bot.command('meme', async ctx => {
   try {
     const response = await axios.get(
-      `https://meme-api.com/gimme/${encodeURIComponent(defaultSubreddit)}`
+      `https://meme-api.com/gimme/${encodeURIComponent(defaultSubreddit)}`,
+      { timeout: 30000 }
     );
 
     if (response.data && response.data.url) {
@@ -66,7 +67,8 @@ bot.command('meme', async ctx => {
       );
     }
   } catch (error) {
-    await ctx.reply('Не удалось получить исторический мем. Попробуйте позже.');
+    console.error('Ошибка при обработке команды /meme:', error); // Логируем ошибку для отладки
+    await ctx.reply('Произошла ошибка при получении мема. Попробуйте позже.');
   }
 });
 

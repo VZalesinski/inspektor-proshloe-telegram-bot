@@ -1,4 +1,5 @@
 import { Telegraf } from 'telegraf';
+import express from 'express';
 import { generateFunnyHistoryQuizAI21, getRandomPhrase } from './utils.js';
 import {
   answerProbability,
@@ -6,11 +7,12 @@ import {
   token,
   cacheLimit,
   defaultSubreddit,
-  sentMemesCache,
+  sentMemesCache
 } from './constants.js';
 import axios from 'axios';
 
-const bot = new Telegraf(token, { polling: true });
+const app = express();
+const bot = new Telegraf(token);
 
 bot.command('start', async ctx => {
   await ctx.reply('Привет! Я бот для группового чата.');
@@ -32,7 +34,6 @@ bot.command('quiz', async ctx => {
 });
 
 bot.command('meme', async ctx => {
-
   try {
     const response = await axios.get(
       `https://meme-api.com/gimme/${encodeURIComponent(defaultSubreddit)}`
@@ -61,7 +62,7 @@ bot.command('meme', async ctx => {
       }
     } else {
       await ctx.reply(
-        `Не удалось найти мемы по запросу или в сабреддите: "${subreddit}"`
+        `Не удалось найти мемы по запросу или в сабреддите: "${defaultSubreddit}"`
       );
     }
   } catch (error) {
@@ -90,7 +91,36 @@ bot.on('left_chat_member', async ctx => {
   await ctx.reply(`${leftMember.first_name} покинул чат.`);
 });
 
-bot.launch();
+// Обработка входящих обновлений от Telegram через вебхук
+app.use(express.json());
+app.post('/webhook', (req, res) => {
+  bot.handleUpdate(req.body, res);
+  res.sendStatus(200);
+});
+
+// Запуск сервера и установка вебхука
+const port = process.env.PORT || 3000;
+app.listen(port, async () => {
+  console.log(`Сервер запущен на порту ${port}`);
+  const webhookUrl = process.env.WEBHOOK_URL;
+  if (webhookUrl) {
+    try {
+      const wasSet = await bot.telegram.setWebhook(webhookUrl + '/webhook');
+      if (wasSet) {
+        console.log('Вебхук успешно установлен!');
+      } else {
+        console.log('Не удалось установить вебхук.');
+      }
+    } catch (err) {
+      console.error('Ошибка при установке вебхука:', err);
+    }
+  } else {
+    console.log('Переменная окружения WEBHOOK_URL не установлена.');
+  }
+});
+
+// Больше не вызывайте bot.launch() при использовании вебхуков
+// bot.launch();
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));

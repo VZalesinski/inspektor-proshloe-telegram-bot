@@ -53,8 +53,7 @@ bot.command('meme', async ctx => {
           'Этот мем уже был отправлен недавно. Попробуем еще раз...'
         );
 
-        return ctx.telegram
-          .sendChatAction(ctx.chat.id, 'upload_photo')
+        return ctx.telegram.sendChatAction(ctx.chat.id, 'upload_photo');
       }
 
       await ctx.sendPhoto(memeUrl);
@@ -83,14 +82,14 @@ bot.command('meme', async ctx => {
 });
 
 bot.on('message', async ctx => {
-   if (ctx.message.text) {
-
-     const receivedText = ctx.message.text;
-     console.log('command text (в группе)', ctx.message.text);
-     if (receivedText && Math.random() < answerProbability) {
-       await ctx.reply(getRandomPhrase(phrasesList));
-     }
-   }
+  console.log('Получено сообщение:', ctx.message);
+  if (ctx.message.text) {
+    const receivedText = ctx.message.text;
+    console.log('command text (в группе)');
+    if (receivedText && Math.random() < answerProbability) {
+      await ctx.reply(getRandomPhrase(phrasesList));
+    }
+  }
 });
 
 bot.on('new_chat_members', async ctx => {

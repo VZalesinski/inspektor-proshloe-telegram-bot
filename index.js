@@ -42,7 +42,7 @@ bot.command('meme', async ctx => {
   try {
     const response = await axios.get(
       `https://meme-api.com/gimme/${encodeURIComponent(defaultSubreddit)}`,
-      { timeout: 15000 }
+      { timeout: 30000 }
     );
 
     if (response.data && response.data.url) {

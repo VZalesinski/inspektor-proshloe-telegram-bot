@@ -82,13 +82,15 @@ bot.command('meme', async ctx => {
   }
 });
 
-bot.on('text', async ctx => {
-  const receivedText = ctx.message.text;
+bot.on('message', async ctx => {
+   if (ctx.message.text) {
 
-  console.log('command text')
-  if (receivedText && Math.random() < answerProbability) {
-    await ctx.reply(getRandomPhrase(phrasesList));
-  }
+     const receivedText = ctx.message.text;
+     console.log('command text (в группе)', ctx.message.text);
+     if (receivedText && Math.random() < answerProbability) {
+       await ctx.reply(getRandomPhrase(phrasesList));
+     }
+   }
 });
 
 bot.on('new_chat_members', async ctx => {

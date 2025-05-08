@@ -1,4 +1,6 @@
-export const token = '7617170109:AAEEItwiC3FBqt9Km4q1mB5aNOh1FffoMb0';
+import 'dotenv/config';
+
+export const token = process.env.TOKEN;
 export const ai21ApiKey = '02af2338-82a6-4df2-a370-1844be45b137';
 
 export const phrasesList = [
@@ -18,9 +20,8 @@ export const phrasesList = [
   'ну просто тьмутаракань!'
 ];
 
-export const answerProbability = 0.8; 
+export const answerProbability = 0.3;
 
 export const sentMemesCache = new Set();
 export const cacheLimit = 20;
 export const defaultSubreddit = 'HistoryMemes';
-

@@ -81,6 +81,7 @@ bot.command('meme', async ctx => {
 bot.on('text', async ctx => {
   const receivedText = ctx.message.text;
 
+  console.log('here')
   if (receivedText && Math.random() < answerProbability) {
     await ctx.reply(getRandomPhrase(phrasesList));
   }

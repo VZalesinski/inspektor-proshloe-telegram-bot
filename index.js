@@ -15,10 +15,14 @@ const app = express();
 const bot = new Telegraf(token);
 
 bot.command('start', async ctx => {
+  console.log('command start');
+
   await ctx.reply('Привет! Я бот для группового чата.');
 });
 
 bot.command('quiz', async ctx => {
+  console.log('command quiz');
+
   const topic = ctx.message.text.substring('/quiz '.length).trim();
 
   if (!topic) {
@@ -34,6 +38,7 @@ bot.command('quiz', async ctx => {
 });
 
 bot.command('meme', async ctx => {
+  console.log('command meme');
   try {
     const response = await axios.get(
       `https://meme-api.com/gimme/${encodeURIComponent(defaultSubreddit)}`,
@@ -50,7 +55,6 @@ bot.command('meme', async ctx => {
 
         return ctx.telegram
           .sendChatAction(ctx.chat.id, 'upload_photo')
-          .then(() => bot.handleUpdate(ctx.update));
       }
 
       await ctx.sendPhoto(memeUrl);
@@ -81,7 +85,7 @@ bot.command('meme', async ctx => {
 bot.on('text', async ctx => {
   const receivedText = ctx.message.text;
 
-  console.log('here')
+  console.log('command text')
   if (receivedText && Math.random() < answerProbability) {
     await ctx.reply(getRandomPhrase(phrasesList));
   }
